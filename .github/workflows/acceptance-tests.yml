@@ -1,3 +1,4 @@
+
 # name: Acceptance Tests
 
 # on:
@@ -27,11 +28,9 @@
 #           tools: composer:v2
 #           coverage: none
           
-#       - name: Validate composer.json
-#         run: composer validate --strict
-          
-#       - name: Install Composer dependencies
-#         run: composer install --prefer-dist --no-progress
+#       - name: Update Composer dependencies
+#         run: |
+#           composer update --prefer-dist --no-progress
           
 #       - name: Start PHP server
 #         run: php -S localhost:8000 &
@@ -41,7 +40,7 @@
 #           timeout 60s bash -c 'while ! nc -z localhost 4444; do sleep 2; done'
           
 #       - name: Run acceptance tests with debug
-#         run: vendor/bin/codecept run acceptance --debug
+#         run: vendor/bin/codecept run Acceptance --debug
 
 name: Acceptance Tests
 
@@ -73,11 +72,12 @@ jobs:
           coverage: none
           
       - name: Update Composer dependencies
-        run: |
-          composer update --prefer-dist --no-progress
+        run: composer update --prefer-dist --no-progress
           
       - name: Start PHP server
-        run: php -S localhost:8000 &
+        run: |
+          php -S localhost:8000 &
+          timeout 10s bash -c 'until curl -s http://localhost:8000 > /dev/null; do sleep 1; done'
           
       - name: Wait for Selenium
         run: |
@@ -85,4 +85,3 @@ jobs:
           
       - name: Run acceptance tests with debug
         run: vendor/bin/codecept run Acceptance --debug
-
