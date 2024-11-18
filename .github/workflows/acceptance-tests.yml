@@ -72,8 +72,9 @@ jobs:
           tools: composer:v2
           coverage: none
           
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress
+      - name: Update Composer dependencies
+        run: |
+          composer update --prefer-dist --no-progress
           
       - name: Start PHP server
         run: php -S localhost:8000 &
@@ -84,3 +85,4 @@ jobs:
           
       - name: Run acceptance tests with debug
         run: vendor/bin/codecept run acceptance --debug
+
