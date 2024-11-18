@@ -129,8 +129,9 @@ jobs:
         run: |
           php -S 0.0.0.0:8885 -t . & # Bind to all interfaces
           sleep 5 # Give the server time to start
+      - name: Add host.docker.internal to /etc/hosts
+        run: echo "172.17.0.1 host.docker.internal" | sudo tee -a /etc/hosts
       - name: Wait for Selenium
         run: |
-          while ! nc -z localhost 4444; do sleep 1; done # Check Selenium availability
-      - name: Run Acceptance Tests
+          while ! nc -z localhost 4444; do sleep 1; done # Check Selenium availability      - name: Run Acceptance Tests
         run: vendor/bin/codecept run Acceptance -vv --debug
