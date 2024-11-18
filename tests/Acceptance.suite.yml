@@ -1,0 +1,70 @@
+# Codeception Acceptance Test Suite Configuration
+#
+# Perform tests in a browser by either emulating one using PhpBrowser, or in a real browser using WebDriver.
+# If you need both WebDriver and PhpBrowser tests, create a separate suite for each.
+
+# actor: AcceptanceTester
+# modules:
+#     enabled:
+#         - WebDriver:
+#             url: http://localhost:8885/?page_id=9,
+#             browser: chrome
+# # Add Codeception\Step\Retry trait to AcceptanceTester to enable retries
+# step_decorators:
+#     - Codeception\Step\ConditionalAssertion
+#     - Codeception\Step\TryTo
+#     - Codeception\Step\Retry
+
+# actor: AcceptanceTester
+# modules:
+#     enabled:
+#         - WebDriver:
+#             url: 'http://localhost'
+#             browser: chrome
+#             host: '127.0.0.1'
+#             port: 9515
+#             window_size: false
+#             capabilities:
+#                 "goog:chromeOptions":
+#                     args: ["--headless", "--disable-gpu", "--no-sandbox"]
+
+
+# actor: AcceptanceTester
+# modules:
+#     enabled:
+#         - WebDriver:
+#             url: 'http://localhost'
+#             browser: chrome
+#             host: '127.0.0.1'
+#             port: 9515
+#             path: '/'  # Remove 'wd/hub'
+#             window_size: false
+#             capabilities:
+#                 "goog:chromeOptions":
+#                     args: ["--headless", "--disable-gpu", "--no-sandbox"]
+
+# actor: AcceptanceTester
+# modules:
+#     enabled:
+#         - WebDriver:
+#             url: 'http://localhost'
+#             browser: firefox
+#             host: '127.0.0.1'
+#             port: 9515
+#             path: '/'
+
+actor: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            url: 'http://localhost:8000'
+            browser: firefox
+            host: '127.0.0.1'
+            port: 4444
+            path: '/'
+            wait: 10
+            pageload_timeout: 30
+            # capabilities:
+            #     moz:firefoxOptions:
+            #         args: ['-headless']
+
