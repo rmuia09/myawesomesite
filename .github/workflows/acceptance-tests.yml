@@ -16,6 +16,8 @@ jobs:
         ports:
           - 4444:4444
         options: --shm-size=2g
+        env:
+          SE_OPTS: "-headless"
 
     steps:
       - uses: actions/checkout@v3
@@ -29,16 +31,11 @@ jobs:
       - name: Update Composer dependencies
         run: composer update --prefer-dist --no-progress
           
-      # - name: Start PHP server
-      #   run: |
-      #     php -S localhost:8000 -t . &
-      #     sleep 5
-      #     curl -v http://localhost:8000
+      - name: Start PHP server
+        run: |
+          php -S localhost:8885 -t . &
+          sleep 5
           
-      # - name: Verify services
-      #   run: |
-      #     netstat -tulpn
-      #     curl -v http://localhost:4444/status
-          
-      - name: Run acceptance tests   
-        run: vendor/bin/codecept run Acceptance -vv --debug                     
+      - name: Run acceptance tests
+        run: vendor/bin/codecept run Acceptance -vv --debug       
+                  
