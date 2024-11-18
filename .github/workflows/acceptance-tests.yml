@@ -29,16 +29,16 @@ jobs:
       - name: Update Composer dependencies
         run: composer update --prefer-dist --no-progress
           
-      - name: Start PHP server
-        run: |
-          php -S localhost:8000 -t . &
-          sleep 5
-          curl -v http://localhost:8000
+      # - name: Start PHP server
+      #   run: |
+      #     php -S localhost:8000 -t . &
+      #     sleep 5
+      #     curl -v http://localhost:8000
           
-      - name: Verify services
-        run: |
-          netstat -tulpn
-          curl -v http://localhost:4444/status
+      # - name: Verify services
+      #   run: |
+      #     netstat -tulpn
+      #     curl -v http://localhost:4444/status
           
       - name: Run acceptance tests   
         run: vendor/bin/codecept run Acceptance -vv --debug                     
