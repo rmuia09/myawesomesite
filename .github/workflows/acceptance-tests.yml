@@ -141,6 +141,54 @@
 #         run: vendor/bin/codecept run Acceptance -vv --debug
 
 
+# name: Acceptance Tests
+
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v3
+
+#       - name: Setup PHP
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: '8.1'
+#           tools: composer:v2
+
+#       - name: Install Dependencies
+#         run: composer update --prefer-dist --no-progress
+
+#       - name: Start PHP Server
+#         run: php -S localhost:8885 -t . &
+
+#       - name: Install Firefox and Selenium
+#         run: |
+#           sudo apt-get update
+#           sudo apt-get install -y firefox openjdk-11-jre-headless
+#           wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
+#           tar -xvzf geckodriver-v0.33.0-linux64.tar.gz
+#           chmod +x geckodriver
+#           sudo mv geckodriver /usr/local/bin/
+#           wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
+#           java -jar selenium-server-standalone-3.141.59.jar -role standalone -port 4444 &
+#           sleep 10
+#       - name: Wait for PHP Server
+#         run: |
+#           while ! nc -z localhost 8885; do sleep 1; done
+
+#       - name: Check Selenium Server Status
+#         run: curl -v http://localhost:4444/wd/hub/status  # Or /status depending on your Selenium version
+
+#       - name: Run Acceptance Tests
+#         run: vendor/bin/codecept run Acceptance -vv --debug
+
 name: Acceptance Tests
 
 on:
@@ -163,12 +211,12 @@ jobs:
           tools: composer:v2
 
       - name: Install Dependencies
-        run: composer update --prefer-dist --no-progress
+         run: composer update --prefer-dist --no-progress
 
       - name: Start PHP Server
         run: php -S localhost:8885 -t . &
 
-      - name: Install Firefox and Selenium
+      - name: Install Firefox and Selenium Grid
         run: |
           sudo apt-get update
           sudo apt-get install -y firefox openjdk-11-jre-headless
@@ -177,14 +225,15 @@ jobs:
           chmod +x geckodriver
           sudo mv geckodriver /usr/local/bin/
           wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
-          java -jar selenium-server-standalone-3.141.59.jar -role standalone -port 4444 &
+          # Start Selenium Hub
+          java -jar selenium-server-standalone-3.141.59.jar -role hub &
+          sleep 5
+          # Start Selenium Node
+          java -jar selenium-server-standalone-3.141.59.jar -role node -hub http://localhost:4444/grid/register &
           sleep 10
-      - name: Wait for PHP Server
-        run: |
-          while ! nc -z localhost 8885; do sleep 1; done
 
-      - name: Check Selenium Server Status
-        run: curl -v http://localhost:4444/wd/hub/status  # Or /status depending on your Selenium version
+      - name: Verify Selenium Grid
+        run: curl http://localhost:4444/grid/console
 
       - name: Run Acceptance Tests
         run: vendor/bin/codecept run Acceptance -vv --debug
