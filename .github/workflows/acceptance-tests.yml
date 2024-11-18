@@ -123,7 +123,8 @@ jobs:
           php-version: '8.1'
           tools: composer:v2
       - name: Install Dependencies
-        run: composer install --no-progress
+        # run: composer install --no-progress
+        run: composer update --prefer-dist --no-progress
       - name: Start PHP Server
         run: |
           php -S 0.0.0.0:8885 -t . & # Bind to all interfaces
