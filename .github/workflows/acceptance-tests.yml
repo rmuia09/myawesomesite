@@ -123,15 +123,15 @@ jobs:
           php-version: '8.1'
           tools: composer:v2
       - name: Install Dependencies
-        # run: composer install --no-progress
-        run: composer update --prefer-dist --no-progress
+        run: composer install --no-progress
       - name: Start PHP Server
         run: |
           php -S 0.0.0.0:8885 -t . & # Bind to all interfaces
           sleep 5 # Give the server time to start
-      - name: Add host.docker.internal to /etc/hosts
-        run: echo "172.17.0.1 host.docker.internal" | sudo tee -a /etc/hosts
       - name: Wait for Selenium
         run: |
-          while ! nc -z localhost 4444; do sleep 1; done # Check Selenium availability      - name: Run Acceptance Tests
+          while ! nc -z localhost 4444; do sleep 1; done # Check Selenium availability
+      - name: Add host.docker.internal to /etc/hosts
+        run: echo "172.17.0.1 host.docker.internal" | sudo tee -a /etc/hosts
+      - name: Run Acceptance Tests
         run: vendor/bin/codecept run Acceptance -vv --debug
