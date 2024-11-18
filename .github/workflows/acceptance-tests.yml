@@ -25,20 +25,20 @@ jobs:
         with:
           php-version: '8.1'
           tools: composer:v2
+          coverage: none
+          
+      - name: Validate composer.json
+        run: composer validate --strict
           
       - name: Install Composer dependencies
-        run: |
-          composer install --no-progress
+        run: composer install --prefer-dist --no-progress
           
       - name: Start PHP server
-        run: php -S localhost:8000 public/ &
+        run: php -S localhost:8000 &
           
       - name: Wait for Selenium
         run: |
-          while ! nc -z localhost 4444; do
-            echo "Waiting for Selenium..."
-            sleep 1
-          done
-
-      - name: Run acceptance tests
-        run: vendor/bin/codecept run acceptance
+          timeout 60s bash -c 'while ! nc -z localhost 4444; do sleep 2; done'
+          
+      - name: Run acceptance tests with debug
+        run: vendor/bin/codecept run acceptance --debug
