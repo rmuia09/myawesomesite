@@ -211,7 +211,7 @@ jobs:
           tools: composer:v2
 
       - name: Install Dependencies
-         run: composer update --prefer-dist --no-progress
+        run: composer install --no-progress
 
       - name: Start PHP Server
         run: php -S localhost:8885 -t . &
