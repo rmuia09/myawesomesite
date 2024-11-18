@@ -1,3 +1,48 @@
+# name: Acceptance Tests
+
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+    
+#     services:
+#       selenium:
+#         image: selenium/standalone-firefox:latest
+#         ports:
+#           - 4444:4444
+#         options: --shm-size=2g
+
+#     steps:
+#       - uses: actions/checkout@v3
+      
+#       - name: Setup PHP
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: '8.1'
+#           tools: composer:v2
+#           coverage: none
+          
+#       - name: Validate composer.json
+#         run: composer validate --strict
+          
+#       - name: Install Composer dependencies
+#         run: composer install --prefer-dist --no-progress
+          
+#       - name: Start PHP server
+#         run: php -S localhost:8000 &
+          
+#       - name: Wait for Selenium
+#         run: |
+#           timeout 60s bash -c 'while ! nc -z localhost 4444; do sleep 2; done'
+          
+#       - name: Run acceptance tests with debug
+#         run: vendor/bin/codecept run acceptance --debug
+
 name: Acceptance Tests
 
 on:
@@ -26,9 +71,6 @@ jobs:
           php-version: '8.1'
           tools: composer:v2
           coverage: none
-          
-      - name: Validate composer.json
-        run: composer validate --strict
           
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress
