@@ -97,6 +97,50 @@
 #       - name: Run acceptance tests
 #         run: vendor/bin/codecept run Acceptance -vv --debug
 
+# name: Acceptance Tests
+
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     services:
+#       selenium:
+#         image: selenium/standalone-firefox:latest # Use latest for best compatibility
+#         ports:
+#           - 4444:4444  # Selenium port
+#           - 7900:7900 # Optional VNC for debugging
+
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Setup PHP
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: '8.1'
+#           tools: composer:v2
+#       - name: Install Dependencies
+#         run: composer update --prefer-dist --no-progress
+
+#       - name: Start PHP Server
+#         run: |
+#           php -S 0.0.0.0:8885 -t . & # Bind to all interfaces
+#           sleep 5 # Give the server time to start
+
+#       - name: Wait for Selenium
+#         run: |
+#           while ! nc -z localhost 4444; do sleep 1; done # Check Selenium availability
+
+#       - name: Add host.docker.internal to /etc/hosts
+#         run: echo "172.17.0.1 host.docker.internal" | sudo tee -a /etc/hosts
+
+#       - name: Run Acceptance Tests
+#         run: vendor/bin/codecept run Acceptance -vv --debug
+
+
 name: Acceptance Tests
 
 on:
@@ -108,34 +152,30 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      selenium:
-        image: selenium/standalone-firefox:latest # Use latest for best compatibility
-        ports:
-          - 4444:4444  # Selenium port
-          - 7900:7900 # Optional VNC for debugging
 
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
           tools: composer:v2
+
       - name: Install Dependencies
         run: composer update --prefer-dist --no-progress
 
-      - name: Start PHP Server
-        run: |
-          php -S 0.0.0.0:8885 -t . & # Bind to all interfaces
-          sleep 5 # Give the server time to start
+      - name: Start PHP Server (background)
+        run: php -S localhost:8885 -t . &
 
-      - name: Wait for Selenium
+      - name: Install Firefox and geckodriver
         run: |
-          while ! nc -z localhost 4444; do sleep 1; done # Check Selenium availability
+          sudo apt-get update
+          sudo apt-get install -y firefox geckodriver
 
-      - name: Add host.docker.internal to /etc/hosts
-        run: echo "172.17.0.1 host.docker.internal" | sudo tee -a /etc/hosts
-        
+      - name: Wait for PHP Server
+        run: |
+          while ! nc -z localhost 8885; do sleep 1; done
+
       - name: Run Acceptance Tests
         run: vendor/bin/codecept run Acceptance -vv --debug
