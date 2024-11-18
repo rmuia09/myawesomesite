@@ -31,13 +31,9 @@ jobs:
           
       - name: Start PHP server
         run: |
-          php -S 0.0.0.0:8000 -t . &
+          php -S 127.0.0.1:8000 -t . &
           sleep 5
-
-      - name: Update Acceptance.suite.yml
-        run: |
-          sed -i 's/host: '"'"'selenium'"'"'/host: '"'"'localhost'"'"'/' tests/Acceptance.suite.yml
-          cat tests/Acceptance.suite.yml
+          curl -v http://127.0.0.1:8000
           
       - name: Run acceptance tests
-        run: vendor/bin/codecept run Acceptance -vv --debug                 
+        run: vendor/bin/codecept run Acceptance -vv --debug                     

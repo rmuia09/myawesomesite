@@ -57,13 +57,10 @@ actor: AcceptanceTester
 modules:
     enabled:
         - WebDriver:
-            url: 'http://host.docker.internal:8000'
+            url: 'http://127.0.0.1:8000'
             browser: firefox
-            host: 'selenium'
+            host: 'localhost'
             port: 4444
             path: '/'
             wait: 10
-            pageload_timeout: 30            # capabilities:
-            #     moz:firefoxOptions:
-            #         args: ['-headless']
-
+            pageload_timeout: 30
