@@ -133,4 +133,4 @@ jobs:
         run: |
           while ! nc -z localhost 4444; do sleep 1; done # Check Selenium availability
       - name: Run Acceptance Tests
-        run: vendor/bin/codecept run acceptance -vv --debug
+        run: vendor/bin/codecept run Acceptance -vv --debug
