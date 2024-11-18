@@ -171,8 +171,11 @@ jobs:
       - name: Install Firefox and geckodriver
         run: |
           sudo apt-get update
-          sudo apt-get install -y firefox geckodriver
-
+          sudo apt-get install -y firefox
+          # Add the Mozilla Team PPA for geckodriver
+          sudo add-apt-repository -y ppa:mozillateam/ppa
+          sudo apt-get update
+          sudo apt-get install -y geckodriver
       - name: Wait for PHP Server
         run: |
           while ! nc -z localhost 8885; do sleep 1; done
