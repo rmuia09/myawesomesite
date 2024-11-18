@@ -31,9 +31,9 @@ jobs:
           
       - name: Start PHP server
         run: |
-          php -S 127.0.0.1:8000 -t . &
+          php -S 127.0.0.1:8885 -t . &
           sleep 5
-          curl -v http://127.0.0.1:8000
+          curl -v http://127.0.0.1:8885
           
       - name: Run acceptance tests
         run: vendor/bin/codecept run Acceptance -vv --debug                     
