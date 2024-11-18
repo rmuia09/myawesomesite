@@ -181,5 +181,8 @@ jobs:
         run: |
           while ! nc -z localhost 8885; do sleep 1; done
 
+      - name: Check Selenium Server Status
+        run: curl -v http://localhost:4444/wd/hub/status  # Or /status depending on your Selenium version
+
       - name: Run Acceptance Tests
         run: vendor/bin/codecept run Acceptance -vv --debug
