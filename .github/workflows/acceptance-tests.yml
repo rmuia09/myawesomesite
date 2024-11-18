@@ -15,7 +15,7 @@ jobs:
         image: selenium/standalone-firefox:latest
         ports:
           - 4444:4444
-        options: --shm-size=2g
+        options: --shm-size=2g --network-alias selenium
 
     steps:
       - uses: actions/checkout@v3
@@ -40,13 +40,18 @@ jobs:
         run: |
           php -S 0.0.0.0:8000 -t . &
           sleep 5
-          curl -v http://localhost:8000
+          netstat -tulpn | grep 8000
+          curl -v http://127.0.0.1:8000
           
       - name: Wait for Selenium
         run: |
           timeout 60s bash -c 'while ! nc -z localhost 4444; do sleep 2; done'
+          curl -v http://localhost:4444/status
           
       - name: Run acceptance tests with debug
+        env:
+          SELENIUM_HOST: selenium
+          PHP_SERVER_HOST: 127.0.0.1
         run: |
           export DISPLAY=:99
-          vendor/bin/codecept run Acceptance --debug
+          vendor/bin/codecept run acceptance -vv --debug
