@@ -84,5 +84,5 @@ jobs:
           timeout 60s bash -c 'while ! nc -z localhost 4444; do sleep 2; done'
           
       - name: Run acceptance tests with debug
-        run: vendor/bin/codecept run acceptance --debug
+        run: vendor/bin/codecept run Acceptance --debug
 
