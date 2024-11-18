@@ -15,10 +15,8 @@ jobs:
         image: selenium/standalone-firefox:4.10.0
         ports:
           - 4444:4444
-        options: >-
-          --shm-size=2g
-          --network-alias selenium
-          --network host
+          - 7900:7900
+        options: --shm-size=2g
         env:
           SE_NODE_SESSION_TIMEOUT: 30
           SE_START_XVFB: false
@@ -37,7 +35,6 @@ jobs:
           
       - name: Start PHP server
         run: |
-
           php -S 0.0.0.0:8885 -t . &
           sleep 5
           
@@ -45,5 +42,5 @@ jobs:
         run: |
           curl --retry 10 --retry-delay 5 -v http://localhost:4444/status
           
-      - name: Run acceptance tests    
-        run: vendor/bin/codecept run Acceptance -vv --debug                  
+      - name: Run acceptance tests
+        run: vendor/bin/codecept run Acceptance -vv --debug
