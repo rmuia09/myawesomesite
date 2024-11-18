@@ -31,9 +31,14 @@ jobs:
           
       - name: Start PHP server
         run: |
-          php -S 127.0.0.1:8885 -t . &
+          php -S localhost:8000 -t . &
           sleep 5
-          curl -v http://127.0.0.1:8885
+          curl -v http://localhost:8000
           
-      - name: Run acceptance tests
+      - name: Verify services
+        run: |
+          netstat -tulpn
+          curl -v http://localhost:4444/status
+          
+      - name: Run acceptance tests   
         run: vendor/bin/codecept run Acceptance -vv --debug                     
