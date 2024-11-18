@@ -24,13 +24,21 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          extensions: mbstring, intl
+          tools: composer:v2
+          
+      - name: Install Composer dependencies
+        run: |
+          composer install --no-progress
           
       - name: Start PHP server
-        run: php -S localhost:8000 &
+        run: php -S localhost:8000 public/ &
           
-      - name: Install dependencies
-        run: composer install
+      - name: Wait for Selenium
+        run: |
+          while ! nc -z localhost 4444; do
+            echo "Waiting for Selenium..."
+            sleep 1
+          done
 
       - name: Run acceptance tests
         run: vendor/bin/codecept run acceptance
